@@ -118,7 +118,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             return 1;
         case '-':
             nowParse = 1;
-            incBuf;
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c >= '0' && c <= '9');
         case '0':
         case '1':
         case '2':
