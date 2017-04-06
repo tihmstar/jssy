@@ -16,7 +16,7 @@
 #define incTok (*tokens ? (*tokensBufSize ? (++*tokens) : (ret=JSSY_ERROR_PART ,(jssytok_t*)0)) : 0 )
 
 static inline int isBlank(char c){
-    return c == ' ' || c == '\n' || c == '\r';
+    return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
 long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t *tokensBufSize){
