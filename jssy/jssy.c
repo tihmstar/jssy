@@ -100,19 +100,17 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
                 tk->size++;
             return 1;
         case 't':
-        case 'T':
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'r' || c == 'R');
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'u' || c == 'U');
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e' || c == 'E');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'r');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'u');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 1;
             return 1;
         case 'f':
-        case 'F':
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'a' || c == 'A');
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l' || c == 'L');
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 's' || c == 'S');
-            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e' || c == 'E');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'a');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 's');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 0;
             return 1;
