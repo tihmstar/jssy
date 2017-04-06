@@ -44,9 +44,9 @@ long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, s
             tk->subval = &(*tokens)[1];
         reparseArr:
             tmplink = incTok;
+            tk->size++;
             assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret += nowParse;
-            tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
             if (c == ','){
                 if (*tokens) tmplink->next = &(*tokens)[1];
@@ -88,7 +88,6 @@ long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, s
             if (*tokens) tmplink->subval = incTok;
             assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret +=nowParse;
-            tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
             if (c == ','){
                 if (*tokens) tmplink->next = &(*tokens)[1];
