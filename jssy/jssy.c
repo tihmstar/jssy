@@ -38,7 +38,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             tk->type = JSSY_ARRAY;
             while ((c = valIncBuf) && isBlank(c));
             if (c == ']')
-                return 1;
+                return ret;
             decBuf;
             tk->subval = &(*tokens)[1];
         reparseArr:
@@ -61,14 +61,16 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
                     }
                 }
                 return ret;
-            }else
+            }else if (ret < 0)
+                return ret;
+            else
                 assure(JSSY_ERROR_INVAL, 0);
             break;
         case '{':
             tk->type = JSSY_DICT;
             while ((c = valIncBuf) && isBlank(c));
             if (c == '}')
-                return 1;
+                return ret;
             decBuf;
             tk->subval = &(*tokens)[1];
         reparseObject:
@@ -101,7 +103,9 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
                     }
                 }
                 return ret;
-            }else
+            }else if (ret < 0)
+                return ret;
+            else
                 assure(JSSY_ERROR_INVAL, 0);
             break;
         case '"':
@@ -109,14 +113,14 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             tk->value = *buffer;
             while ((c = valIncBuf) && (c != '"' || tk->value[tk->size-1] == '\\'))
                 tk->size++;
-            return 1;
+            return ret;
         case 't':
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'r');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'u');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 1;
-            return 1;
+            return ret;
         case 'f':
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'a');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l');
@@ -124,7 +128,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 0;
-            return 1;
+            return ret;
         case '-':
             nowParse = 1;
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c >= '0' && c <= '9');
@@ -147,10 +151,13 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
                 tk->numval = -tk->numval;
             assure(JSSY_ERROR_INVAL, c == 0 || isBlank(c) || c == ']' || c == '}' || c == ',');
             decBuf;
-            return 1;
+            return ret;
             
         default:
-            assure(JSSY_ERROR_INVAL, 0);
+            if (ret < 0)
+                return ret;
+            else
+                assure(JSSY_ERROR_INVAL, 0);
             break;
     }
     
