@@ -8,7 +8,7 @@
 
 #include "jssy.h"
 
-#define clearTok(tok) tok->type = JSSY_UNDEFINED, tok->size=0, tok->value = NULL, tok->next = NULL, tok->prev = NULL
+#define clearTok(tok) tok->type = JSSY_UNDEFINED, tok->size=0, tok->value = NULL, tok->subval = NULL, tok->next = NULL, tok->prev = NULL
 #define assure(code,cond) do {if (!(cond)){*bufferSize = 0; return code; }} while(0)
 #define incBuf (*bufferSize ? (--*bufferSize,++*buffer) : (ret=JSSY_ERROR_PART ,(char*)0))
 #define valIncBuf (*bufferSize ? (--*bufferSize,*(*buffer)++) : (ret=JSSY_ERROR_PART, 0))
@@ -36,6 +36,10 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
     switch (c) {
         case '[':
             tk->type = JSSY_ARRAY;
+            while ((c = valIncBuf) && isBlank(c));
+            if (c == ']')
+                return 1;
+            decBuf;
             tk->subval = &(*tokens)[1];
         reparseArr:
             tmplink = incTok;
@@ -62,12 +66,18 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             break;
         case '{':
             tk->type = JSSY_DICT;
+            while ((c = valIncBuf) && isBlank(c));
+            if (c == '}')
+                return 1;
+            decBuf;
             tk->subval = &(*tokens)[1];
         reparseObject:
             tmplink = incTok;
             nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize);
-            assure(JSSY_ERROR_INVAL, tmplink->type == JSSY_STRING);
-            if (*tokens) tmplink->type = JSSY_DICT_KEY;
+            if (*tokens){
+                assure(JSSY_ERROR_INVAL, tmplink->type == JSSY_STRING);
+                tmplink->type = JSSY_DICT_KEY;
+            }
             ret += nowParse;
             tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
