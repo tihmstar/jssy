@@ -107,7 +107,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
         case '"':
             tk->type = JSSY_STRING;
             tk->value = *buffer;
-            while ((c = valIncBuf) && c != '"')
+            while ((c = valIncBuf) && (c != '"' || tk->value[tk->size-1] == '\\'))
                 tk->size++;
             return 1;
         case 't':
