@@ -19,7 +19,7 @@ static inline int isBlank(char c){
     return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
-long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t *tokensBufSize){
+long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t *tokensBufSize){
     long ret = 1;
     long nowParse = 0;
     char c = 0;
@@ -111,7 +111,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             break;
         case '"':
             tk->type = JSSY_STRING;
-            tk->value = *buffer;
+            tk->value = (char*)*buffer;
             while ((c = valIncBuf) && (c != '"' || tk->value[tk->size-1] == '\\'))
                 tk->size++;
             return ret;
@@ -165,7 +165,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
     return ret;
 }
 
-long jssy_parse(char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize){
+long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize){
     return jssy_parse_p(&buffer, &bufferSize, &tokens, &tockensBufSize);
 }
 

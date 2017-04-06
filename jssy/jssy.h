@@ -48,7 +48,7 @@ typedef struct jssytok{
     struct jssytok *prev;
 } jssytok_t;
 
-long jssy_parse(char *buffer, size_t bufferSize, jssytok_t *tokes, size_t tokensBufSize);
+long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize);
 /*
  run this with tokens=NULL and tokensBufSize=NULL to get the total amount of tokens
  Then alloc tokenCnt*sizeof(jssytype_t) bytes of memory and pass it to tokens and the size to tokensBufSize
