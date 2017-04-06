@@ -10,10 +10,10 @@
 
 #define clearTok(tok) tok->type = JSSY_UNDEFINED, tok->size=0, tok->value = NULL, tok->subval = NULL, tok->next = NULL, tok->prev = NULL
 #define assure(code,cond) do {if (!(cond)){*bufferSize = 0; return code; }} while(0)
-#define incBuf (*bufferSize ? (--*bufferSize,++*buffer) : (ret=JSSY_ERROR_PART ,(char*)0))
+#define incBuf (*bufferSize ? (--*bufferSize,++*buffer) : (ret=JSSY_ERROR_PART,(char*)0))
 #define valIncBuf (*bufferSize ? (--*bufferSize,*(*buffer)++) : (ret=JSSY_ERROR_PART, 0))
 #define decBuf (++*bufferSize,--*buffer)
-#define incTok (*tokens ? (*tokensBufSize ? (++*tokens) : (ret=JSSY_ERROR_PART ,(jssytok_t*)0)) : 0 )
+#define incTok (*tokens ? (*tokensBufSize ? (++*tokens) : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0)) : 0 )
 
 static inline int isBlank(char c){
     return c == ' ' || c == '\n' || c == '\r' || c == '\t';
@@ -26,9 +26,10 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
     jssytok_t tmp;
     jssytok_t *tmplink;
     
-    assure(JSSY_ERROR_PART, bufferSize);
+    assure(JSSY_ERROR_PART, *bufferSize);
     if (*tokens)
         assure(JSSY_ERROR_NOMEM, *tokensBufSize >= sizeof(jssytok_t));
+    
     *tokensBufSize -= sizeof(jssytok_t);
     jssytok_t *tk = *tokens ? *tokens : &tmp;
     clearTok(tk);
@@ -43,7 +44,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             tk->subval = &(*tokens)[1];
         reparseArr:
             tmplink = incTok;
-            nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize);
+            assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret += nowParse;
             tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
@@ -85,7 +86,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             while ((c = valIncBuf) && isBlank(c));
             assure(JSSY_ERROR_INVAL,c == ':');
             if (*tokens) tmplink->subval = incTok;
-            nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize);
+            assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret +=nowParse;
             tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
