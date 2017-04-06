@@ -66,6 +66,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
         reparseObject:
             tmplink = incTok;
             nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize);
+            assure(JSSY_ERROR_INVAL, tmplink->type == JSSY_STRING);
             if (*tokens) tmplink->type = JSSY_DICT_KEY;
             ret += nowParse;
             tk->size += nowParse;
