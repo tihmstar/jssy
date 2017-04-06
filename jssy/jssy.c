@@ -145,6 +145,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             } while ((c = valIncBuf) && c >= '0' && c <= '9');
             if (nowParse)
                 tk->numval = -tk->numval;
+            assure(JSSY_ERROR_INVAL, c == 0 || isBlank(c) || c == ']' || c == '}' || c == ',');
             decBuf;
             return 1;
             
