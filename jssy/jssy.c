@@ -141,7 +141,6 @@ long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, s
         case '-':
             nowParse = 1;
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c >= '0' && c <= '9');
-        case '0':
         case '1':
         case '2':
         case '3':
@@ -151,11 +150,39 @@ long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, s
         case '7':
         case '8':
         case '9':
-            tk->type = JSSY_PRIMITIVE;
             do {
                 tk->numval *= 10;
                 tk->numval += c - '0';
             } while ((c = valIncBuf) && c >= '0' && c <= '9');
+            goto parsefloat;
+        case '0':
+            c = valIncBuf;
+        parsefloat:
+            tk->type = JSSY_PRIMITIVE;
+            if (c == '.') {
+                assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c >= '0' && c <= '9');
+                float fhelper = 0.1;
+                do {
+                    tk->numval += (c - '0') * fhelper;
+                    fhelper /= 10;
+                } while ((c = valIncBuf) && c >= '0' && c <= '9');
+            }
+            if (c == 'e' || c == 'E') {
+                char sign;
+                assure(JSSY_ERROR_INVAL, (sign = valIncBuf) && (sign == '-' || sign == '+'));
+                assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c >= '0' && c <= '9');
+                int ehelper = 0;
+                do {
+                    ehelper *=10;
+                    ehelper += c - '0';
+                } while ((c = valIncBuf) && c >= '0' && c <= '9');
+                while (ehelper--) {
+                    if (sign == '+')
+                        tk->numval *=10;
+                    else
+                        tk->numval /= 10;
+                }
+            }
             if (nowParse)
                 tk->numval = -tk->numval;
             assure(JSSY_ERROR_INVAL, c == 0 || isBlank(c) || c == ']' || c == '}' || c == ',');
