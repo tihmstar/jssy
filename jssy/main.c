@@ -33,6 +33,7 @@ int main(int argc, const char * argv[]) {
     ret = jssy_parse(buf, size, tokens, tokensSize);
     
     jssytok_t *devs = jssy_dictGetValueForKey(tokens, "devices");
+    if (!devs) devs = tokens;
     jssy_doForValuesInArray(devs, {
         printf("%.*s ----------------------------\n",t->size,t->value);
         jssytok_t *firmwares = jssy_dictGetValueForKey(t->subval,"firmwares");

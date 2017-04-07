@@ -112,8 +112,11 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
         case '"':
             tk->type = JSSY_STRING;
             tk->value = *buffer;
-            while ((c = valIncBuf) && (c != '"' || tk->value[tk->size-1] == '\\'))
+            while ((c = valIncBuf) && (nowParse++ || c != '"')){
                 tk->size++;
+                if (c != '\\' || nowParse == 2)
+                    nowParse = 0;
+            }
             return ret;
         case 't':
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'r');
@@ -122,11 +125,17 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 1;
             return ret;
+        case 'n':
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'u');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l');
+            assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l');
+            goto isfalse;
         case 'f':
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'a');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'l');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 's');
             assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
+        isfalse:
             tk->type = JSSY_PRIMITIVE;
             tk->numval = 0;
             return ret;
