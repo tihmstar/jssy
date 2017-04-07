@@ -19,7 +19,7 @@ static inline int isBlank(char c){
     return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
-long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t *tokensBufSize){
+long jssy_parse_p(const char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t *tokensBufSize){
     long ret = 1;
     long nowParse = 0;
     char c = 0;
@@ -44,9 +44,9 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             tk->subval = &(*tokens)[1];
         reparseArr:
             tmplink = incTok;
+            tk->size++;
             assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret += nowParse;
-            tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
             if (c == ','){
                 if (*tokens) tmplink->next = &(*tokens)[1];
@@ -88,7 +88,6 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             if (*tokens) tmplink->subval = incTok;
             assure(nowParse, (nowParse = jssy_parse_p(buffer, bufferSize, tokens, tokensBufSize)) > 0);
             ret +=nowParse;
-            tk->size += nowParse;
             while ((c = valIncBuf) && isBlank(c));
             if (c == ','){
                 if (*tokens) tmplink->next = &(*tokens)[1];
@@ -111,7 +110,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
             break;
         case '"':
             tk->type = JSSY_STRING;
-            tk->value = *buffer;
+            tk->value = (char*)*buffer;
             while ((c = valIncBuf) && (nowParse++ || c != '"')){
                 tk->size++;
                 if (c != '\\' || nowParse == 2)
@@ -174,7 +173,7 @@ long jssy_parse_p(char **buffer, size_t *bufferSize, jssytok_t **tokens, size_t 
     return ret;
 }
 
-long jssy_parse(char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize){
+long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize){
     return jssy_parse_p(&buffer, &bufferSize, &tokens, &tockensBufSize);
 }
 
