@@ -26,8 +26,7 @@ int main(int argc, const char * argv[]) {
     
     
     long ret;
-//    ret = jssy_parse(buf, size, NULL, 0);
-    ret = 60000;
+    ret = jssy_parse(buf, size, NULL, 0);
     size_t tokensSize = ret * sizeof(jssytok_t);
     jssytok_t *tokens = malloc(tokensSize);
     

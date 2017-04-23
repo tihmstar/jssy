@@ -12,8 +12,8 @@
 #define assure(code,cond) do {if (!(cond)){bufferSize = 0; return code; }} while(0)
 #define valIncBuf (bufferSize ? (--bufferSize,*buffer++) : (ret=JSSY_ERROR_PART, 0))
 #define decBuf (++bufferSize,--buffer)
-#define incTok (tokensBufSize >= sizeof(jssytok_t) ? (++ret,tokensBufSize-=sizeof(jssytok_t),tokens++) : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0))
-#define nextTok (tokensBufSize >= sizeof(jssytok_t) ? tokens : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0))
+#define incTok (tokens ? (tokensBufSize >= sizeof(jssytok_t) ? (++ret,tokensBufSize-=sizeof(jssytok_t),tokens++) : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0)) : (++ret,&deadToken))
+#define nextTok (tokens ? (tokensBufSize >= sizeof(jssytok_t) ? tokens : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0)) : &deadToken)
 
 #define linkBasicElem if (!cur->next) return ret;assure(JSSY_ERROR_INVAL, cur->prev)
 /*                     -----------(1)------------;-----------------(2)---------------
@@ -32,16 +32,21 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
     jssytok_t deadToken = {JSSY_UNDEFINED,1234567890};
     char c = '\0';
  
-    //cleartokens
-    cur = tokens;
-    for (size_t i = tokensBufSize; i>=sizeof(jssytok_t); i-=sizeof(jssytok_t)) {
-        clearTok(cur);
-        cur++;
+    if (!tokensBufSize)
+        tokens = NULL;
+    else{
+        assure(JSSY_ERROR_NOMEM, tokens);
+        //cleartokens
+        cur = tokens;
+        for (size_t i = tokensBufSize; i>=sizeof(jssytok_t); i-=sizeof(jssytok_t)) {
+            clearTok(cur);
+            cur++;
+        }
     }
+    
     cur = &deadToken;
     
-doparse:
-    {
+    do {
         long nowParse = 0;
         while ((c = valIncBuf) && isBlank(c)){}
         if (cur->next && (cur->next->type == JSSY_ARRAY || cur->next->type == JSSY_DICT))
@@ -53,18 +58,19 @@ doparse:
                 assure(JSSY_ERROR_NOMEM, cur = incTok);
                 cur->type = (c == '[') ? JSSY_ARRAY : JSSY_DICT;
                 assure(JSSY_ERROR_INVAL,cur->subval = nextTok);
-                cur->subval->prev = cur;
-                cur->subval->next = cur;
-
+                cur->subval->next = cur->subval->prev = cur;
+                
                 deadToken.next = cur;//this is required to detect special case where array is empty
                 cur = &deadToken;
                 break;
             case ':':
+                if (!tokens) break;
                 assure(JSSY_ERROR_INVAL, cur->type == JSSY_DICT_KEY);
                 assure(JSSY_ERROR_INVAL, cur->subval = nextTok);
                 cur->subval->next = cur->subval->prev = cur;
                 break;
             case ',':
+                if (!tokens) break;
                 assure(JSSY_ERROR_INVAL, cur && cur->next); //check the container of the token
                 if (cur->next->type == JSSY_ARRAY) {
                     tmp = cur->next; //backup owner
@@ -81,6 +87,7 @@ doparse:
                 break;
             case ']':
             case '}':
+                if (!tokens) break;
                 assure(JSSY_ERROR_INVAL, cur && cur->next); //check the container of the token
                 if (c == ']')
                     assure(JSSY_ERROR_INVAL, cur->next->type == JSSY_ARRAY);
@@ -122,6 +129,7 @@ doparse:
                         nowParse = 0;
                 }
                 
+                if (!tokens) break;
                 linkBasicElem;
                 if (cur->next->type == JSSY_DICT) // if token is owned by a dict, it is a dict_key instead of a string
                     cur->type = JSSY_DICT_KEY;
@@ -216,7 +224,7 @@ doparse:
                 }
                 break;
         }
-    } goto doparse;   
+    } while (bufferSize);
     
     return ret;
 }
