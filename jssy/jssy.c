@@ -10,7 +10,7 @@
 
 #define clearTok(tok) tok->type = JSSY_UNDEFINED, tok->size=0, tok->value = NULL, tok->subval = NULL, tok->next = NULL, tok->prev = NULL
 #define assure(code,cond) do {if (!(cond)){bufferSize = 0; return code; }} while(0)
-#define valIncBuf (bufferSize ? (--bufferSize,*buffer++) : (ret=JSSY_ERROR_PART, 0))
+#define valIncBuf (bufferSize ? (--bufferSize,*buffer++) : (ret=(tokens ? JSSY_ERROR_PART : ret), 0))
 #define decBuf (++bufferSize,--buffer)
 #define incTok (tokens ? (tokensBufSize >= sizeof(jssytok_t) ? (++ret,tokensBufSize-=sizeof(jssytok_t),tokens++) : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0)) : (++ret,&deadToken))
 #define nextTok (tokens ? (tokensBufSize >= sizeof(jssytok_t) ? tokens : (ret=JSSY_ERROR_NOMEM ,(jssytok_t*)0)) : &deadToken)
@@ -216,7 +216,7 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                 linkBasicElem;
                 break;
             default:
-                if (ret < 0)
+                if (ret < 0 || !tokens)
                     return ret;
                 else{
                     assure(JSSY_ERROR_PART, c && bufferSize);
