@@ -26,11 +26,13 @@ int main(int argc, const char * argv[]) {
     
     
     long ret;
-    ret = jssy_parse(buf, size, NULL, 0);
+//    ret = jssy_parse(buf, size, NULL, 0);
+    ret = 60000;
     size_t tokensSize = ret * sizeof(jssytok_t);
     jssytok_t *tokens = malloc(tokensSize);
     
     ret = jssy_parse(buf, size, tokens, tokensSize);
+    printf("ret=%d\n",ret);
     
     jssytok_t *devs = jssy_dictGetValueForKey(tokens, "devices");
     if (!devs) devs = tokens;
