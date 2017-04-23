@@ -46,7 +46,8 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
     
     cur = &deadToken;
     
-    do {
+doparse:
+    {
         long nowParse = 0;
         while ((c = valIncBuf) && isBlank(c)){}
         if (cur->next && (cur->next->type == JSSY_ARRAY || cur->next->type == JSSY_DICT))
@@ -224,7 +225,10 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                 }
                 break;
         }
-    } while (bufferSize);
+    }
+    if (tokens || bufferSize)
+        goto doparse;
+    
     
     return ret;
 }
