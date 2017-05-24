@@ -10,6 +10,7 @@
 #include "jssy.h"
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 int main(int argc, const char * argv[]) {
     char *buf = NULL;
@@ -27,11 +28,16 @@ int main(int argc, const char * argv[]) {
     
     long ret;
     ret = jssy_parse(buf, size, NULL, 0);
+    assert(ret > 0);
     size_t tokensSize = ret * sizeof(jssytok_t);
     jssytok_t *tokens = malloc(tokensSize);
     
     ret = jssy_parse(buf, size, tokens, tokensSize);
     printf("ret=%d\n",ret);
+    
+    
+    
+    return 1;
     
     jssytok_t *devs = jssy_dictGetValueForKey(tokens, "devices");
     if (!devs) devs = tokens;
