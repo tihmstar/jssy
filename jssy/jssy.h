@@ -56,12 +56,7 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
 
 jssytok_t *jssy_dictGetValueForKey(const jssytok_t *dict, const char *key);
 jssytok_t *jssy_objectAtIndex(const jssytok_t *arr, unsigned index);
-#define jssy_doForValuesInArray(arr,code) {\
-if ((arr->type == JSSY_DICT || arr->type == JSSY_ARRAY)){\
-size_t ______i = 0;\
-jssytok_t *______t = arr->subval;\
-for (jssytok_t *t = ______t; ______i<arr->size; t = t->next,______i++)\
-    code\
-}}
+int jssy_doForValuesInArray(jssytok_t *arr, int (*func)(jssytok_t *t));
+
 
 #endif /* jssy_h */

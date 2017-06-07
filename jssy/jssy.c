@@ -307,3 +307,17 @@ jssytok_t *jssy_objectAtIndex(const jssytok_t *arr, unsigned index){
     while (index--) arr = arr->next;
     return (jssytok_t *)arr;
 }
+
+int jssy_doForValuesInArray(jssytok_t *arr, int (*func)(jssytok_t *t)){
+    int rt = 0;
+    if ((arr->type == JSSY_DICT || arr->type == JSSY_ARRAY)){
+        size_t i=0;
+        for (jssytok_t *t=arr->subval; i<arr->size; t=t->next,i++) {
+            if ((rt = func(t)))
+                return rt;
+        }
+    }else
+        return -1;
+    
+    return 0;
+}
