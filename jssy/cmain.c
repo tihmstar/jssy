@@ -12,10 +12,10 @@
 #include <string.h>
 #include <assert.h>
 
-int main(int argc, const char * argv[]) {
+int cmain(int argc, const char * argv[]) {
     char *buf = NULL;
     size_t size = 0;
-    FILE *f = fopen("file.json","r");// place https://api.ipsw.me/v2.1/firmware.json here
+    FILE *f = fopen("offsets.json","r");// place https://api.ipsw.me/v2.1/firmware.json here
     fseek(f, 0, SEEK_END);
     size = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -40,17 +40,6 @@ int main(int argc, const char * argv[]) {
     return 1;
     
     jssytok_t *devs = jssy_dictGetValueForKey(tokens, "devices");
-    if (!devs) devs = tokens;
-    jssy_doForValuesInArray(devs, {
-        printf("%.*s ----------------------------\n",t->size,t->value);
-        jssytok_t *firmwares = jssy_dictGetValueForKey(t->subval,"firmwares");
-        jssy_doForValuesInArray(firmwares, {
-            jssytok_t *url = jssy_dictGetValueForKey(t, "buildid");
-            printf("%.*s, ",url->size,url->value);
-        });
-        printf("\n");
-    
-    });
     
     
     
