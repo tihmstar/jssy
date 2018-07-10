@@ -33,7 +33,7 @@ jssy::jssy(string filename){
     std::string buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
     
-    assure((_cnt = c::jssy_parse(buffer.c_str(), buffer.size(), NULL, NULL)) > 0);
+    assure((_cnt = c::jssy_parse(buffer.c_str(), buffer.size(), NULL, 0)) > 0);
     
     assure(_token = (c::jssytok_t*)malloc(_cnt * sizeof(c::jssytok_t)));
     

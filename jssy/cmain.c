@@ -33,7 +33,7 @@ int cmain(int argc, const char * argv[]) {
     jssytok_t *tokens = malloc(tokensSize);
     
     ret = jssy_parse(buf, size, tokens, tokensSize);
-    printf("ret=%d\n",ret);
+    printf("ret=%ld\n",ret);
     
     
     
