@@ -111,7 +111,7 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                     cur = cur-1; //the previus token has to be the matching key to this value. No other memory layout possible
                 }else if (c == ']'){
                     //Because who would do such evil things like {"a":1,] ???
-                    assure(JSSY_ERROR_INVAL, cur->prev->type == JSSY_ARRAY);
+                    assure(JSSY_ERROR_INVAL, cur->next->type == JSSY_ARRAY);
                 }
                 
                 if (!--cur->next->size){ //correct array size
