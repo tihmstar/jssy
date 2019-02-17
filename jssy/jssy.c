@@ -36,6 +36,10 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
     jssytok_t deadToken = {JSSY_UNDEFINED,1234567890};
     int isCounterMode = (tokens == NULL);
     char c = '\0';
+    
+#if DEBUG
+    jssytok_t *startOfTokens = tokens;
+#endif
  
     if (!tokensBufSize)
         tokens = NULL;
@@ -51,8 +55,7 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
     
     cur = &deadToken;
     
-doparse:
-    {
+    do {
         long nowParse = 0;
         while (bufferSize && isBlank((c = valIncBufUnsafe))){}
         if (cur->next && (cur->next->type == JSSY_ARRAY || cur->next->type == JSSY_DICT))
@@ -106,6 +109,9 @@ doparse:
                     assure(JSSY_ERROR_INVAL, cur->next->type == JSSY_DICT_KEY);
                     cur->next = cur->prev = NULL;
                     cur = cur-1; //the previus token has to be the matching key to this value. No other memory layout possible
+                }else if (c == ']'){
+                    //Because who would do such evil things like {"a":1,] ???
+                    assure(JSSY_ERROR_INVAL, cur->prev->type == JSSY_ARRAY);
                 }
                 
                 if (!--cur->next->size){ //correct array size
@@ -271,9 +277,7 @@ doparse:
                 if (c && !isCounterMode)
                     assure(JSSY_ERROR_INVAL, 0);
         }
-    }
-    if (tokens || (bufferSize && isCounterMode))
-        goto doparse;
+    }while (tokens || (bufferSize && isCounterMode));
     
     
 endparse:
