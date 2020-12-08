@@ -29,7 +29,7 @@ std::string ReplaceAll(std::string str, const std::string& from, const std::stri
 jssy::jssy(string filename){
     fstream file;
     file.open(filename);
-    
+        
     std::string buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
     
@@ -74,12 +74,12 @@ jssy jssy::subval() const{
     return {_token->subval};
 }
 
-float jssy::numval() const{
+double jssy::numval() const{
     retassure(_token->type == c::JSSY_PRIMITIVE, "not a number");
     return _token->numval;
 }
 
-jssy::operator float() const{
+jssy::operator double() const{
     return numval();
 }
 

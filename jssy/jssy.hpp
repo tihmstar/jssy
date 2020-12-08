@@ -52,7 +52,7 @@ namespace jssycpp {
         c::jssytype_t type() const;
         size_t size() const;
         std::string stringValue() const;
-        float numval() const;
+        double numval() const;
         jssy subval() const;
         jssy operator [](int index) const;
         jssy operator [](std::string key) const;
@@ -65,7 +65,7 @@ namespace jssycpp {
         
         
         explicit operator std::string() const;
-        explicit operator float() const;
+        explicit operator double() const;
         
         ~jssy();
         

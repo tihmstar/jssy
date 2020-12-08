@@ -41,7 +41,7 @@ typedef struct jssytok{
     size_t size;
     union{
         char *value;
-        float numval;
+        double numval;
     };
     struct jssytok *subval;
     struct jssytok *next;

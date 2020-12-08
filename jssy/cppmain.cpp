@@ -12,7 +12,7 @@
 
 using namespace std;
 
-int main(int argc, const char * argv[]) {
+int cppmain(int argc, const char * argv[]) {
 
     jssycpp::jssy jc("firmwares.json"); // place https://api.ipsw.me/v2.1/firmwares.json here
     

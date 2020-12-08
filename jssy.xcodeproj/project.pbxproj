@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		87215FB51E9446F2003A7728 /* cmain.c in Sources */ = {isa = PBXBuildFile; fileRef = 87215FB41E9446F2003A7728 /* cmain.c */; };
 		87215FBD1E944713003A7728 /* jssy.c in Sources */ = {isa = PBXBuildFile; fileRef = 87215FBB1E944713003A7728 /* jssy.c */; };
+		8796E003257E6B2B00BA5B58 /* jssy_create.c in Sources */ = {isa = PBXBuildFile; fileRef = 8796E002257E6B2B00BA5B58 /* jssy_create.c */; };
 		87B0A5D71F6B41BA00F712A0 /* cppmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87B0A5D61F6B41BA00F712A0 /* cppmain.cpp */; };
 		87B0A5DA1F6B420500F712A0 /* jssy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87B0A5D81F6B420500F712A0 /* jssy.cpp */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,8 @@
 		87215FB41E9446F2003A7728 /* cmain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cmain.c; sourceTree = "<group>"; };
 		87215FBB1E944713003A7728 /* jssy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jssy.c; sourceTree = "<group>"; };
 		87215FBC1E944713003A7728 /* jssy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jssy.h; sourceTree = "<group>"; };
+		8796E001257E6B2B00BA5B58 /* jssy_create.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jssy_create.h; sourceTree = "<group>"; };
+		8796E002257E6B2B00BA5B58 /* jssy_create.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jssy_create.c; sourceTree = "<group>"; };
 		87B0A5D61F6B41BA00F712A0 /* cppmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cppmain.cpp; sourceTree = "<group>"; };
 		87B0A5D81F6B420500F712A0 /* jssy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jssy.cpp; sourceTree = "<group>"; };
 		87B0A5D91F6B420500F712A0 /* jssy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jssy.hpp; sourceTree = "<group>"; };
@@ -69,14 +72,24 @@
 			children = (
 				87215FBC1E944713003A7728 /* jssy.h */,
 				87215FBB1E944713003A7728 /* jssy.c */,
+				8796E001257E6B2B00BA5B58 /* jssy_create.h */,
+				8796E002257E6B2B00BA5B58 /* jssy_create.c */,
+				8796E000257E6B0B00BA5B58 /* jssy++ */,
+				87215FB41E9446F2003A7728 /* cmain.c */,
+			);
+			path = jssy;
+			sourceTree = "<group>";
+		};
+		8796E000257E6B0B00BA5B58 /* jssy++ */ = {
+			isa = PBXGroup;
+			children = (
 				87B0A5DB1F6B426900F712A0 /* ptr_smart.hpp */,
 				87B0A5DC1F6B429E00F712A0 /* helper.h */,
 				87B0A5D91F6B420500F712A0 /* jssy.hpp */,
 				87B0A5D81F6B420500F712A0 /* jssy.cpp */,
-				87215FB41E9446F2003A7728 /* cmain.c */,
 				87B0A5D61F6B41BA00F712A0 /* cppmain.cpp */,
 			);
-			path = jssy;
+			name = "jssy++";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +132,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 87215FA81E9446F2003A7728;
@@ -136,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8796E003257E6B2B00BA5B58 /* jssy_create.c in Sources */,
 				87215FBD1E944713003A7728 /* jssy.c in Sources */,
 				87215FB51E9446F2003A7728 /* cmain.c in Sources */,
 				87B0A5DA1F6B420500F712A0 /* jssy.cpp in Sources */,
