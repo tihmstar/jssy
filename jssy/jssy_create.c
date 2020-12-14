@@ -247,7 +247,7 @@ void jssy_free(jssy_create_tok_t obj){
             while (obj->size) {
                 jssy_dict_remove_item(obj, obj->subval->value);
             }
-            
+        break;
         case JSSY_UNDEFINED: //THIS IS AN ERROR!
             assure(0);
     }
@@ -348,6 +348,7 @@ void jssy_array_append_item(jssy_create_tok_t array, jssy_create_tok_t item){
             assure(v = array->subval);
             assure(v = v->prev);
             item->next = v->next;
+            item->next->prev = item;
             item->prev = v;
             v->next = item;
         }
@@ -381,6 +382,7 @@ void jssy_array_insert_item(jssy_create_tok_t array, jssy_create_tok_t item, uin
             }else{
                 assure(v = jssy_array_get_item(array,n-1));
                 item->next = v->next;
+                item->next->prev = item;
                 item->prev = v;
                 v->next = item;
             }
@@ -419,6 +421,7 @@ void jssy_array_remove_item(jssy_create_tok_t array, uint32_t n){
             
         }
         ret->next = ret->prev = NULL;
+        array->size--;
         safeFreeCustom(ret,jssy_free);
     }
 error:
@@ -453,11 +456,10 @@ void jssy_dict_set_item(jssy_create_tok_t dict, const char* key, jssy_create_tok
         
         assure(dict_key = jssy_new_tok(JSSY_DICT_KEY));
         dict_key->size = strlen(key);
-        assure(dict_key->value = (char*)malloc(dict_key->size));
-        strncpy(dict_key->value, key, dict_key->size);
+        assure(dict_key->value = (char*)malloc(dict_key->size+1));
+        strncpy(dict_key->value, key, dict_key->size+1);
         
         if (dict->size == 0) {
-            dict->subval = dict_key;
             dict_key->next = dict_key->prev = dict_key;
         }else{
             jssy_create_tok_t v = NULL;
@@ -466,7 +468,9 @@ void jssy_dict_set_item(jssy_create_tok_t dict, const char* key, jssy_create_tok
             dict_key->next = v;
             dict_key->prev = v->prev;
             v->prev = dict_key;
+            dict_key->prev->next = dict_key;
         }
+        dict->subval = dict_key;
         dict_key->subval = item;
         
         dict->size++;
@@ -498,7 +502,9 @@ void jssy_dict_remove_item(jssy_create_tok_t dict, const char* key){
                 keys->next->prev = keys->prev;
 
                 keys->next = keys->prev = NULL;
+                dict->size--;
                 safeFreeCustom(keys, jssy_free);
+                break;
             }
         }
     }
