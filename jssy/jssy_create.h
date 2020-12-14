@@ -28,6 +28,10 @@ jssy_create_tok_t jssy_new_array();
 
 jssy_create_tok_t jssy_new_dict();
 
+#ifdef HAVE_JSSY_BOOL
+jssy_create_tok_t jssy_new_bool(int val);
+#endif
+
 #pragma mark interact with array objects
 
 size_t jssy_array_get_size(const jssy_create_tok_t array);

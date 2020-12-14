@@ -77,6 +77,18 @@ size_t jssy_dump_size(jssy_create_tok_t obj){
             assure(vs = jssy_dump_size(obj->subval)); //object cannot be of size 0
             ret += vs;
         }
+            break;
+#ifdef HAVE_JSSY_BOOL
+        case JSSY_BOOL:
+        {
+            if(obj->numval >= 0.5 || obj->numval <= -0.5 ){
+                ret = 4;//true
+            } else{
+                ret = 5;//false
+            }
+        }
+            break;
+#endif
             
         case JSSY_UNDEFINED:
             break;
@@ -171,6 +183,19 @@ size_t jssy_dump_internal(jssy_create_tok_t obj, char *buf, size_t bufsize){
             realprint += origsize-bufsize;
         }
             break;
+#ifdef HAVE_JSSY_BOOL
+        case JSSY_BOOL:
+        {
+            if(obj->numval >= 0.5 || obj->numval <= -0.5){
+                assure(bufsize>=4);
+                realprint = snprintf(buf, bufsize+1, "true");
+            } else{
+                assure(bufsize>=5);
+                realprint = snprintf(buf, bufsize+1, "false");
+            }
+        }
+            break;
+#endif
         case JSSY_UNDEFINED: //THIS IS AN ERROR!
             assure(0);
     }
@@ -201,6 +226,9 @@ char *jssy_dump(jssy_create_tok_t obj){
 void jssy_free(jssy_create_tok_t obj){
     int err = 0;
     switch (obj->type) {
+#ifdef HAVE_JSSY_BOOL
+        case JSSY_BOOL: //intentionally fall through
+#endif
         case JSSY_PRIMITIVE:
             //noting to do here
             break;
@@ -266,6 +294,20 @@ jssy_create_tok_t jssy_new_array(){
 jssy_create_tok_t jssy_new_dict(){
     return jssy_new_tok(JSSY_DICT);
 }
+
+#ifdef HAVE_JSSY_BOOL
+jssy_create_tok_t jssy_new_bool(int value){
+    jssy_create_tok_t ret = NULL;
+    if((ret = jssy_new_tok(JSSY_BOOL))){
+        if(value == 0){
+            ret->numval = 0;
+        } else{
+            ret->numval = 1;
+        }
+    }
+    return ret;
+}
+#endif
 
 #pragma mark interact with array objects
 

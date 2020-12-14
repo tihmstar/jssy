@@ -177,7 +177,11 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                 assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'u');
                 assure(JSSY_ERROR_INVAL, (c = valIncBuf) && c == 'e');
                 if (!isCounterMode) { //check if we are in countermode
+#ifdef HAVE_JSSY_BOOL
+                    cur->type = JSSY_BOOL;
+#else
                     cur->type = JSSY_PRIMITIVE;
+#endif
                     cur->numval = 1;
                     
                     linkBasicElem;
@@ -196,7 +200,11 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
             isfalse:
                 assure(JSSY_ERROR_NOMEM, cur = incTok);
                 if (!isCounterMode) { //check if we are in countermode
+#ifdef HAVE_JSSY_BOOL
+                    cur->type = JSSY_BOOL;
+#else
                     cur->type = JSSY_PRIMITIVE;
+#endif
                     cur->numval = 0;
                     
                     linkBasicElem;
