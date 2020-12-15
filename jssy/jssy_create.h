@@ -24,9 +24,9 @@ jssy_create_tok_t jssy_new_string(const char *str);
 
 jssy_create_tok_t jssy_new_primitive(double numval);
 
-jssy_create_tok_t jssy_new_array();
+jssy_create_tok_t jssy_new_array(void);
 
-jssy_create_tok_t jssy_new_dict();
+jssy_create_tok_t jssy_new_dict(void);
 
 #ifdef HAVE_JSSY_BOOL
 jssy_create_tok_t jssy_new_bool(int val);

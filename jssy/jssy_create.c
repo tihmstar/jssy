@@ -287,11 +287,11 @@ jssy_create_tok_t jssy_new_primitive(double numval){
     return ret;
 }
 
-jssy_create_tok_t jssy_new_array(){
+jssy_create_tok_t jssy_new_array(void){
     return jssy_new_tok(JSSY_ARRAY);
 }
 
-jssy_create_tok_t jssy_new_dict(){
+jssy_create_tok_t jssy_new_dict(void){
     return jssy_new_tok(JSSY_DICT);
 }
 
