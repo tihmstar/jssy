@@ -179,10 +179,11 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                 if (!isCounterMode) { //check if we are in countermode
 #ifdef HAVE_JSSY_BOOL
                     cur->type = JSSY_BOOL;
+                    cur->boolval = 1;
 #else
                     cur->type = JSSY_PRIMITIVE;
-#endif
                     cur->numval = 1;
+#endif
                     
                     linkBasicElem;
                 }
@@ -202,10 +203,11 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                 if (!isCounterMode) { //check if we are in countermode
 #ifdef HAVE_JSSY_BOOL
                     cur->type = JSSY_BOOL;
+                    cur->boolval = 0;
 #else
                     cur->type = JSSY_PRIMITIVE;
-#endif
                     cur->numval = 0;
+#endif
                     
                     linkBasicElem;
                 }

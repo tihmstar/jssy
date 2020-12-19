@@ -45,6 +45,9 @@ typedef struct jssytok{
     union{
         char *value;
         double numval;
+#ifdef HAVE_JSSY_BOOL
+        unsigned char boolval;
+#endif
     };
     struct jssytok *subval;
     struct jssytok *next;

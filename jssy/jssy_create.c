@@ -19,6 +19,9 @@ typedef struct jssy_create_tok_private_t{
     union{
         char *value;
         double numval;
+#ifdef HAVE_JSSY_BOOL
+        unsigned char boolval;
+#endif
     };
     struct jssy_create_tok_private_t *subval;
     struct jssy_create_tok_private_t *next;
@@ -81,7 +84,7 @@ size_t jssy_dump_size(jssy_create_tok_t obj){
 #ifdef HAVE_JSSY_BOOL
         case JSSY_BOOL:
         {
-            if(obj->numval >= 0.5 || obj->numval <= -0.5 ){
+            if(obj->boolval){
                 ret = 4;//true
             } else{
                 ret = 5;//false
@@ -186,7 +189,7 @@ size_t jssy_dump_internal(jssy_create_tok_t obj, char *buf, size_t bufsize){
 #ifdef HAVE_JSSY_BOOL
         case JSSY_BOOL:
         {
-            if(obj->numval >= 0.5 || obj->numval <= -0.5){
+            if(obj->boolval){
                 assure(bufsize>=4);
                 realprint = snprintf(buf, bufsize+1, "true");
             } else{
@@ -300,9 +303,9 @@ jssy_create_tok_t jssy_new_bool(int value){
     jssy_create_tok_t ret = NULL;
     if((ret = jssy_new_tok(JSSY_BOOL))){
         if(value == 0){
-            ret->numval = 0;
+            ret->boolval = 0;
         } else{
-            ret->numval = 1;
+            ret->boolval = 1;
         }
     }
     return ret;
