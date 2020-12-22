@@ -34,7 +34,7 @@ int main(int argc, const char * argv[]) {
     jssytok_t *tokens = malloc(tokensSize);
     
     ret = jssy_parse(buf, size, tokens, tokensSize);
-    printf("ret=%d\n",ret);
+    printf("ret=%ld\n",ret);
     
     char *ppp = jssy_dump((jssy_create_tok_t) tokens);
    
