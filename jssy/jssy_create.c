@@ -262,11 +262,15 @@ error:
 }
 
 jssy_create_tok_t jssy_new_string(const char *str){
+    return jssy_new_string_with_len(str, strlen(str));
+}
+
+jssy_create_tok_t jssy_new_string_with_len(const char *str, size_t len){
     int err = 0;
     jssy_create_tok_t ret = NULL;
     
     assure(ret = jssy_new_tok(JSSY_STRING));
-    ret->size = strlen(str);
+    ret->size = len;
     assure(ret->value = (char*)malloc(ret->size+1));
     strncpy(ret->value, str, ret->size);
     ret->value[ret->size] = '\0';

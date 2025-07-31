@@ -320,6 +320,7 @@ jssytok_t *jssy_dictGetValueForKey(const jssytok_t *dict, const char *key){
 jssytok_t *jssy_objectAtIndex(const jssytok_t *arr, unsigned index){
     if ((arr->type != JSSY_DICT && arr->type != JSSY_ARRAY) || index >= arr->size)
         return NULL;
+    arr = arr->subval;
     while (index--) arr = arr->next;
     return (jssytok_t *)arr;
 }

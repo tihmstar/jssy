@@ -21,6 +21,7 @@ char *jssy_dump(jssy_create_tok_t obj);
 void jssy_free(jssy_create_tok_t obj);
 
 jssy_create_tok_t jssy_new_string(const char *str);
+jssy_create_tok_t jssy_new_string_with_len(const char *str, size_t len);
 
 jssy_create_tok_t jssy_new_primitive(double numval);
 
