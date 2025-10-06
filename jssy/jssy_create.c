@@ -6,7 +6,8 @@
 //  Copyright © 2020 tihmstar. All rights reserved.
 //
 
-#include "jssy_create.h"
+#include "../include/jssy/jssy_create.h"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

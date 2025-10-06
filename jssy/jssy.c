@@ -6,7 +6,7 @@
 //  Copyright © 2017 tihmstar. All rights reserved.
 //
 
-#include "jssy.h"
+#include "../include/jssy/jssy.h"
 
 #define clearTok(tok) tok->type = JSSY_UNDEFINED, tok->size=0, tok->value = NULL, tok->subval = NULL, tok->next = NULL, tok->prev = NULL
 #define assure(code,cond) do {if (!(cond)){bufferSize = 0; return code; }} while(0)
