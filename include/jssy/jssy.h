@@ -39,6 +39,10 @@ enum jssyerr {
     JSSY_ERROR_PART = -3
 };
 
+/*
+  Note: without manually specifying alignment, windows shits itself!
+*/
+#pragma pack(push, 8) // alignment start
 typedef struct jssytok{
     jssytype_t type;
     size_t size;
@@ -53,6 +57,7 @@ typedef struct jssytok{
     struct jssytok *next;
     struct jssytok *prev;
 } jssytok_t;
+#pragma pack(pop) //alignment end
 
 long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t tockensBufSize);
 /*
