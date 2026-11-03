@@ -11,6 +11,11 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 typedef enum {
     /**
      * JSON type identifier. Basic types are:
@@ -68,6 +73,10 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
 jssytok_t *jssy_dictGetValueForKey(const jssytok_t *dict, const char *key);
 jssytok_t *jssy_objectAtIndex(const jssytok_t *arr, unsigned index);
 int jssy_doForValuesInArray(jssytok_t *arr, int (*func)(jssytok_t *t));
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* jssy_h */
