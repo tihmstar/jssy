@@ -31,7 +31,7 @@ typedef enum {
     JSSY_STRING = 4,
     JSSY_PRIMITIVE = 5,
 #ifdef HAVE_JSSY_BOOL
-    JSSY_BOOL
+    JSSY_BOOL = 6,
 #endif
 } jssytype_t;
 
