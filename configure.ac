@@ -23,7 +23,19 @@ CXXFLAGS+=" -std=c++11"
 CFLAGS+=" -std=c11"
 # Versioning.
 
-# Checks for libraries.
+# Check for operating system
+AC_MSG_CHECKING([whether we need platform-specific build settings])
+case $host_os in
+  *mingw*|*msys*|*linux*)
+      AC_MSG_RESULT([${host_os}])
+      LDFLAGS+=" -no-undefined"
+      ;;
+  *)
+      AC_MSG_RESULT([${host_os}])
+      ;;
+esac
+
+
 
 AC_ARG_ENABLE([debug],
             [AS_HELP_STRING([--enable-debug],
