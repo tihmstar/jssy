@@ -57,7 +57,7 @@ jobs:
           rm "$BUILDROOT.zip"
         done
         echo "moving dependencies to /"
-        sudo cp -r $BUILDROOT/* /
+        sudo cp -r $BUILDROOT/* / || true
         cd ..
         rm -rf depdir
     - name: prepre submodule
