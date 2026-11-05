@@ -102,7 +102,9 @@ long jssy_parse(const char *buffer, size_t bufferSize, jssytok_t *tokens, size_t
                     //handle special case when dict is empty
                     cur = deadToken.next;
                     cur->size = 0;
-                    assure(JSSY_ERROR_INVAL, !cur->subval); //make sure this really only happens when array/dict was empty
+                    //'[' and '{' pre-link the next token as subval. Unless the container is the last token, it is
+                    //set here even though the container turned out to be empty, so clear it instead of asserting
+                    cur->subval = NULL;
                     deadToken.next = NULL;
                     goto checklast;
                 }else if (c == '}'){
